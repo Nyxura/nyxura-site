@@ -1,21 +1,13 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import fs from 'fs';
-import path from 'path';
 import { BYTE_TITLES, BYTE_SECTIONS } from '../../lib/byteTitles';
+import { getDeployedByteNumbers } from '../../lib/getDeployedBytes';
+
+const deployed = getDeployedByteNumbers();
 
 export default function ByteIndexPage() {
-  const contentDir = path.join(process.cwd(), 'content/bytes');
-  const files = fs.readdirSync(contentDir);
-
-  const deployed = files
-    .map((file) => file.match(/byte-(\d{3})\.html/))
-    .filter(Boolean)
-    .map((match) => parseInt(match[1]));
-
   const [search, setSearch] = useState('');
-
   const unlockedCount = deployed.length;
   const totalCount = BYTE_TITLES.length;
 
@@ -50,7 +42,6 @@ export default function ByteIndexPage() {
 
   const renderSection = (section) => {
     const { label, range } = section;
-
     const sectionBytes = filteredTitles.filter(
       (b) => b.number >= range[0] && b.number <= range[1]
     );
@@ -87,7 +78,6 @@ export default function ByteIndexPage() {
         </div>
       </div>
 
-      {/* Progress bar */}
       <div className="w-full h-2 bg-gray-200 rounded mb-10 overflow-hidden">
         <div
           className="h-full bg-blue-600 transition-all duration-500"
