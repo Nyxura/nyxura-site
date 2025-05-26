@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { BYTE_TITLES, BYTE_SECTIONS } from '@/lib/byteTitles';
+import { BYTE_TITLES, BYTE_SECTIONS } from '../../lib/byteTitles';
 
 export default function ByteIndexPage() {
   const contentDir = path.join(process.cwd(), 'content/bytes');
