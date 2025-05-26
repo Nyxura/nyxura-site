@@ -1,14 +1,25 @@
 import fs from 'fs';
 import path from 'path';
 import { notFound } from 'next/navigation';
-import Head from 'next/head';
 
-export async function generateStaticParams() {
-  const dirPath = path.join(process.cwd(), 'content/bytes');
-  const files = fs.readdirSync(dirPath);
-  return files.map(filename => ({
-    slug: filename.replace('.html', '')
-  }));
+export async function generateMetadata({ params }) {
+  const filePath = path.join(process.cwd(), 'content/bytes', `${params.slug}.html`);
+
+  try {
+    const html = await fs.promises.readFile(filePath, 'utf-8');
+    const match = html.match(/<title>(.*?)<\/title>/i);
+    const title = match ? match[1] : 'Byte-Sized AI for MC Pros';
+
+    return {
+      title,
+      description: 'Bold, practical AI insights for consultants. Stay sharp. Stay future-proof. One Byte at a time.',
+    };
+  } catch (err) {
+    return {
+      title: 'Byte-Sized AI for MC Pros',
+      description: 'AI strategy insights built for modern consultants.',
+    };
+  }
 }
 
 export default async function BytePage({ params }) {
@@ -18,20 +29,15 @@ export default async function BytePage({ params }) {
     notFound();
   }
 
-  const content = fs.readFileSync(filePath, 'utf-8');
+  const fullHTML = fs.readFileSync(filePath, 'utf-8');
 
-  // Extract the <title> content from the HTML string
-  const titleMatch = content.match(/<title>(.*?)<\/title>/i);
-  const title = titleMatch ? titleMatch[1] : 'Byte-Sized AI for MC Pros';
+  // Extract just the content between <body> and </body>
+  const bodyMatch = fullHTML.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+  const bodyContent = bodyMatch ? bodyMatch[1] : fullHTML;
 
   return (
-    <>
-      <Head>
-        <title>{title}</title>
-      </Head>
-      <main className="min-h-screen bg-white text-black p-10 prose prose-lg mx-auto">
-        <div dangerouslySetInnerHTML={{ __html: content }} />
-      </main>
-    </>
+    <main className="min-h-screen bg-white text-black p-10 prose prose-lg mx-auto">
+      <div dangerouslySetInnerHTML={{ __html: bodyContent }} />
+    </main>
   );
 }
