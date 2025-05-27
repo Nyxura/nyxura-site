@@ -43,3 +43,19 @@ export default function Home() {
           <br /><br />
           Start unlocking what matters in AI.
         </p>
+        <Link
+          href="/bytes"
+          className="inline-block mt-4 px-6 py-3 text-black bg-white font-semibold rounded-xl hover:bg-gray-200 transition"
+        >
+          🔎 Browse the Bytes
+        </Link>
+      </section>
+
+      {/* Footer */}
+      <footer className="mt-32 text-center text-gray-500 text-sm">
+        Nyxura.ai © {new Date().getFullYear()} — Built with ❤️ to future-proof your edge. <br />
+        <span className="italic">Educational content only. No consulting services offered.</span>
+      </footer>
+    </main>
+  );
+}
