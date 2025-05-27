@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Home() {
   return (
     <main className="flex flex-col items-center justify-center min-h-screen p-6 bg-black text-white">
@@ -9,12 +11,12 @@ export default function Home() {
         <p className="text-lg md:text-xl text-gray-300 mb-6">
           Nyxura.ai is an independent platform delivering practical, no-fluff insights for consultants and leaders navigating the age of artificial intelligence.
         </p>
-        <a
+        <Link
           href="/bytes"
           className="inline-block px-6 py-3 text-black bg-white font-semibold rounded-xl hover:bg-gray-200 transition"
         >
           🔍 Explore the Bytes
-        </a>
+        </Link>
       </section>
 
       {/* About Section */}
@@ -40,19 +42,4 @@ export default function Home() {
           <strong>80 Bytes. No Fluff. Real-World Relevance.</strong>
           <br /><br />
           Start unlocking what matters in AI.
-        </p>
-        <a
-          href="/bytes"
-          className="inline-block mt-4 px-6 py-3 text-black bg-white font-semibold rounded-xl hover:bg-gray-200 transition"
-        >
-          🔎 Browse the Bytes
-        </a>
-      </section>
-
-      {/* Footer */}
-      <footer className="mt-32 text-center text-gray-500 text-sm">
-        Nyxura.ai © {new Date().getFullYear()} — Built with ❤️ to future-proof your edge. <br />
-      </footer>
-    </main>
-  );
-}
+        <
