@@ -7,7 +7,7 @@ export default function Home() {
       {/* Logo */}
       <div className="mb-10">
         <Image
-          src="/nyxura-logo-light.PNG" // Adjust path to your actual logo file
+          src="/nyxura-logo-dark.png" // Adjust path to your actual logo file
           alt="Nyxura Logo"
           width={140}
           height={140}
