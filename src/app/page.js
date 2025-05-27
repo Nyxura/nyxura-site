@@ -42,4 +42,4 @@ export default function Home() {
           <strong>80 Bytes. No Fluff. Real-World Relevance.</strong>
           <br /><br />
           Start unlocking what matters in AI.
-        
+        </p>
