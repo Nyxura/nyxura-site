@@ -9,8 +9,8 @@ export default function Home() {
         <Image
           src="/nyxura-logo-dark.png" // Adjust path to your actual logo file
           alt="Nyxura Logo"
-          width={140}
-          height={140}
+          width={300}
+          height={300}
           priority
         />
       </div>
