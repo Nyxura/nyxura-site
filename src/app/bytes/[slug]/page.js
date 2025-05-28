@@ -45,14 +45,14 @@ export default async function BytePage({ params }) {
         <p className="text-sm text-gray-500">Byte #{padded}</p>
         <h1 className="text-3xl font-bold text-blue-800 mb-2">{byteTitle}</h1>
         <p className="text-sm text-gray-500">
-          Published on {publishDate} by <span className="font-semibold">Nyxura.ai</span>
+          Published on {publishDate} by <span className="font-semibold">Nyxura.ai</span> - Curated by <span className="font-semibold">Tarafa Homsy</span>
         </p>
       </div>
 
       {/* Placeholder image using local static file (update as needed) */}
       <div className="mb-8">
         <Image
-          src="/images/byte-placeholder.png"
+          src="/nyxura-logo-light.png" // Adjust path to your actual image file
           alt={`Visual for ${byteTitle}`}
           width={800}
           height={300}
