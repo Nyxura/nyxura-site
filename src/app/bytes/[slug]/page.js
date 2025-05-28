@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { notFound } from 'next/navigation';
-import { BYTE_TITLES } from '@/lib/byteTitles';
+import { BYTE_TITLES, BYTE_SECTIONS } from '@/lib/byteTitles';
 import Link from 'next/link';
 import Image from 'next/image';
 
@@ -31,6 +31,24 @@ export default async function BytePage({ params }) {
   const bodyMatch = fullHTML.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
   const bodyContent = bodyMatch ? bodyMatch[1] : fullHTML;
 
+  const responsiveStyle = `
+    <style>
+      @media (max-width: 640px) {
+        table {
+          width: 100% !important;
+        }
+        td {
+          padding: 12px !important;
+        }
+        img {
+          max-width: 100% !important;
+          height: auto !important;
+        }
+      }
+    </style>
+  `;
+
+  const wrappedBody = `${responsiveStyle}${bodyContent}`;
   const byteNumber = parseInt(params.slug.replace('byte-', ''));
   const padded = String(byteNumber).padStart(3, '0');
   const byteTitle = BYTE_TITLES[byteNumber - 1] || 'Unknown Byte';
@@ -39,20 +57,41 @@ export default async function BytePage({ params }) {
   const prevByte = byteNumber > 1 ? `/bytes/byte-${String(byteNumber - 1).padStart(3, '0')}` : null;
   const nextByte = byteNumber < BYTE_TITLES.length ? `/bytes/byte-${String(byteNumber + 1).padStart(3, '0')}` : null;
 
+  const NavButtons = () => (
+    <div className="mb-6 flex flex-col sm:flex-row justify-between gap-4">
+      {prevByte ? (
+        <Link href={prevByte} className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 text-sm">
+          ← Previous Byte
+        </Link>
+      ) : <div />}
+
+      <Link href="/bytes" className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 text-sm text-center">
+        ← All Bytes
+      </Link>
+
+      {nextByte ? (
+        <Link href={nextByte} className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 text-sm">
+          Next Byte →
+        </Link>
+      ) : <div />}
+    </div>
+  );
+
   return (
     <main className="min-h-screen bg-white text-black px-4 py-10 md:py-20 max-w-3xl mx-auto">
+      <NavButtons />
+
       <div className="mb-6">
         <p className="text-sm text-gray-500">Byte #{padded}</p>
         <h1 className="text-3xl font-bold text-blue-800 mb-2">{byteTitle}</h1>
         <p className="text-sm text-gray-500">
-          Published on {publishDate} by <span className="font-semibold">Nyxura.ai</span> - Curated by <span className="font-semibold">Tarafa Homsy</span>
+          Published on {publishDate} by <span className="font-semibold">Nyxura.ai</span> – Curated by <span className="font-semibold">Tarafa Homsy</span>
         </p>
       </div>
 
-      {/* Placeholder image using local static file (update as needed) */}
       <div className="mb-8">
         <Image
-          src="/nyxura-placeholder-light.PNG" // Adjust path to your actual image file
+          src="/nyxura-placeholder-light.png"
           alt={`Visual for ${byteTitle}`}
           width={800}
           height={300}
@@ -60,26 +99,12 @@ export default async function BytePage({ params }) {
         />
       </div>
 
-      {/* Rendered Byte HTML content */}
-      <article className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: bodyContent }} />
+      <article className="prose prose-lg max-w-none overflow-x-auto">
+        <div dangerouslySetInnerHTML={{ __html: wrappedBody }} />
+      </article>
 
-      {/* Navigation */}
-      <div className="mt-12 flex flex-col sm:flex-row justify-between gap-4">
-        {prevByte ? (
-          <Link href={prevByte} className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 text-sm text-gray-800">
-            ← Previous Byte
-          </Link>
-        ) : <div />}
-
-        <Link href="/bytes" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm text-center">
-          Back to Byte Index
-        </Link>
-
-        {nextByte ? (
-          <Link href={nextByte} className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 text-sm text-gray-800">
-            Next Byte →
-          </Link>
-        ) : <div />}
+      <div className="mt-12">
+        <NavButtons />
       </div>
     </main>
   );
