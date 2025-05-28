@@ -52,7 +52,7 @@ export default async function BytePage({ params }) {
       {/* Placeholder image using local static file (update as needed) */}
       <div className="mb-8">
         <Image
-          src="/nyxura-placeholder-light.png" // Adjust path to your actual image file
+          src="/nyxura-placeholder-light.PNG" // Adjust path to your actual image file
           alt={`Visual for ${byteTitle}`}
           width={800}
           height={300}
