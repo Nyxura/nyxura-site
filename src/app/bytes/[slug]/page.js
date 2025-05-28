@@ -2,6 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import { notFound } from 'next/navigation';
 import { BYTE_TITLES } from '@/lib/byteTitles';
+import Link from 'next/link';
+import Image from 'next/image';
 
 export async function generateMetadata({ params }) {
   const filePath = path.join(process.cwd(), 'content/bytes', `${params.slug}.html`);
@@ -32,7 +34,7 @@ export default async function BytePage({ params }) {
   const byteNumber = parseInt(params.slug.replace('byte-', ''));
   const padded = String(byteNumber).padStart(3, '0');
   const byteTitle = BYTE_TITLES[byteNumber - 1] || 'Unknown Byte';
-  const publishDate = new Date().toLocaleDateString('en-CA'); // use your real date logic later
+  const publishDate = new Date().toLocaleDateString('en-CA');
 
   const prevByte = byteNumber > 1 ? `/bytes/byte-${String(byteNumber - 1).padStart(3, '0')}` : null;
   const nextByte = byteNumber < BYTE_TITLES.length ? `/bytes/byte-${String(byteNumber + 1).padStart(3, '0')}` : null;
@@ -43,40 +45,40 @@ export default async function BytePage({ params }) {
         <p className="text-sm text-gray-500">Byte #{padded}</p>
         <h1 className="text-3xl font-bold text-blue-800 mb-2">{byteTitle}</h1>
         <p className="text-sm text-gray-500">
-          Published on {publishDate} by <span className="font-semibold">Nyxura.ai</span> – Curated by <span className="font-semibold">Tarafa Homsy</span> - AI Strategist & Consultant
+          Published on {publishDate} by <span className="font-semibold">Nyxura.ai</span>
         </p>
       </div>
 
-      {/* Optional AI image placeholder */}
+      {/* Placeholder image using local static file (update as needed) */}
       <div className="mb-8">
-        <img
-        //src="https://placehold.co/800x300?text=nyxura.ai"
-        src="/nyxura-logo-light.png"
-        alt={`Placeholder for ${byteTitle}`}
-        className="w-full rounded-xl object-cover shadow-sm"
+        <Image
+          src="/images/byte-placeholder.png"
+          alt={`Visual for ${byteTitle}`}
+          width={800}
+          height={300}
+          className="w-full rounded-xl object-cover shadow-sm"
         />
-
       </div>
 
-      {/* Rendered Byte HTML */}
+      {/* Rendered Byte HTML content */}
       <article className="prose prose-lg max-w-none" dangerouslySetInnerHTML={{ __html: bodyContent }} />
 
-      {/* Navigation buttons */}
+      {/* Navigation */}
       <div className="mt-12 flex flex-col sm:flex-row justify-between gap-4">
         {prevByte ? (
-          <a href={prevByte} className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 text-sm text-gray-800">
+          <Link href={prevByte} className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 text-sm text-gray-800">
             ← Previous Byte
-          </a>
+          </Link>
         ) : <div />}
-        
-        <a href="/bytes" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm text-center">
+
+        <Link href="/bytes" className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm text-center">
           Back to Byte Index
-        </a>
+        </Link>
 
         {nextByte ? (
-          <a href={nextByte} className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 text-sm text-gray-800">
+          <Link href={nextByte} className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 text-sm text-gray-800">
             Next Byte →
-          </a>
+          </Link>
         ) : <div />}
       </div>
     </main>
