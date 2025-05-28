@@ -25,7 +25,7 @@ export async function generateMetadata({ params }) {
         url: `https://nyxura.ai/bytes/${params.slug}`,
         images: [
           {
-            url: `nyxura.ai/nyxura-placeholder-light.PNG`,
+            url: `https://www.nyxura.ai/nyxura-placeholder-light.PNG`,
             width: 1200,
             height: 630,
             alt: title,
