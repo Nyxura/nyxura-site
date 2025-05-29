@@ -1,12 +1,12 @@
 import fs from 'fs';
 import path from 'path';
 import { notFound } from 'next/navigation';
-import { BYTE_TITLES } from '@/lib/byteTitles';
+import { BYTE_TITLES, BYTE_SECTIONS } from '@/lib/byteTitles';
+import { getDeployedByteNumbers } from '@/lib/getDeployedBytes';
 import Link from 'next/link';
 import Image from 'next/image';
 import ScrollToTopButton from '@/components/ScrollToTopButton';
-import { getDeployedByteNumbers } from '@/lib/getDeployedBytes';
-import { BYTE_SECTIONS } from '@/lib/byteTitles'; // Make sure this import is present
+import DarkModeToggle from '@/components/DarkModeToggle';
 import { FaLinkedin, FaTwitter, FaEnvelope } from 'react-icons/fa';
 
 export async function generateMetadata({ params }) {
@@ -58,7 +58,7 @@ export default async function BytePage({ params }) {
   const readTime = `${minutes} min read`;
 
   const sectionLabel = BYTE_SECTIONS.find(
-  (section) => byteNumber >= section.range[0] && byteNumber <= section.range[1]
+    (section) => byteNumber >= section.range[0] && byteNumber <= section.range[1]
   )?.label || 'AI Insight';
 
   const deployed = getDeployedByteNumbers().sort((a, b) => a - b);
@@ -67,10 +67,11 @@ export default async function BytePage({ params }) {
   const nextByte = currentIndex < deployed.length - 1 ? `/bytes/byte-${String(deployed[currentIndex + 1]).padStart(3, '0')}` : null;
 
   return (
-    <main className="min-h-screen bg-white text-black px-4 py-10 md:py-20 max-w-3xl mx-auto dark:bg-black dark:text-white">
+    <main className="min-h-screen bg-white text-black px-4 pt-4 pb-10 md:pt-8 md:pb-20 max-w-3xl mx-auto dark:bg-black dark:text-white">
       <ScrollToTopButton />
+      <DarkModeToggle />
 
-      <div className="mb-6">
+      <div className="mb-6 sticky top-0 z-50 bg-white dark:bg-black pt-4 pb-6 px-4 md:px-8 shadow-sm">
         <p className="text-sm text-gray-500 dark:text-gray-400">{sectionLabel}</p>
         <h1 className="text-3xl font-bold text-blue-800 dark:text-blue-300 mb-2">{byteTitle}</h1>
         <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -78,8 +79,7 @@ export default async function BytePage({ params }) {
         </p>
       </div>
 
-      {/* Top Navigation Buttons */}
-      <div className="mt-6 mb-8 flex flex-col sm:flex-row justify-between gap-4">
+      <div className="mt-6 mb-6 flex flex-col sm:flex-row justify-between gap-4">
         {prevByte ? (
           <Link href={prevByte} className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 text-sm text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white">
             ← Previous Byte
@@ -105,17 +105,20 @@ export default async function BytePage({ params }) {
         )}
       </div>
 
-      <div className="mb-8">
-        <Image
-          src="/nyxura-placeholder-light.PNG"
-          alt={`Visual for ${byteTitle}`}
-          width={800}
-          height={300}
-          className="w-full rounded-xl object-cover shadow-sm"
-        />
-      </div>
+      <article className="prose prose-lg max-w-none dark:prose-invert">
+        <div className="w-full mb-6 bg-white dark:bg-gray-900 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+          <div className="relative w-full h-[150px]">
+            <Image
+              src="/nyxura-placeholder-light.PNG"
+              alt={`Visual for ${byteTitle}`}
+              fill
+              className="object-contain"
+            />
+          </div>
+        </div>
 
-      <article className="prose prose-lg max-w-none dark:prose-invert" dangerouslySetInnerHTML={{ __html: bodyContent }} />
+        <div dangerouslySetInnerHTML={{ __html: bodyContent }} />
+      </article>
 
       <div className="mt-12 flex flex-col sm:flex-row justify-between gap-4">
         {prevByte ? (
@@ -143,33 +146,33 @@ export default async function BytePage({ params }) {
         )}
       </div>
 
-<div className="mt-12 border-t border-gray-200 dark:border-gray-800 pt-6 text-sm text-gray-500 dark:text-gray-400">
-  <p className="mb-2 font-medium">Share this Byte:</p>
-  <div className="flex gap-4">
-    <a
-      href={`https://www.linkedin.com/sharing/share-offsite/?url=https://nyxura.ai/bytes/byte-${padded}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="flex items-center gap-2 hover:underline text-blue-700 dark:text-blue-400"
-    >
-      <FaLinkedin className="text-lg" /> LinkedIn
-    </a>
-    <a
-      href={`https://twitter.com/intent/tweet?url=https://nyxura.ai/bytes/byte-${padded}&text=${encodeURIComponent(byteTitle)}`}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="flex items-center gap-2 hover:underline text-blue-500 dark:text-blue-300"
-    >
-      <FaTwitter className="text-lg" /> Twitter
-    </a>
-    <a
-      href={`mailto:?subject=${encodeURIComponent(byteTitle)}&body=${encodeURIComponent(`Check this out: https://nyxura.ai/bytes/byte-${padded}`)}`}
-      className="flex items-center gap-2 hover:underline text-gray-600 dark:text-gray-300"
-    >
-      <FaEnvelope className="text-lg" /> Email
-    </a>
-  </div>
-</div>
+      <div className="mt-12 border-t border-gray-200 dark:border-gray-800 pt-6 text-sm text-gray-500 dark:text-gray-400">
+        <p className="mb-2 font-medium">Share this Byte:</p>
+        <div className="flex gap-4">
+          <a
+            href={`https://www.linkedin.com/sharing/share-offsite/?url=https://nyxura.ai/bytes/byte-${padded}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 hover:underline text-blue-700 dark:text-blue-400"
+          >
+            <FaLinkedin className="text-lg" /> LinkedIn
+          </a>
+          <a
+            href={`https://twitter.com/intent/tweet?url=https://nyxura.ai/bytes/byte-${padded}&text=${encodeURIComponent(byteTitle)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 hover:underline text-blue-500 dark:text-blue-300"
+          >
+            <FaTwitter className="text-lg" /> Twitter
+          </a>
+          <a
+            href={`mailto:?subject=${encodeURIComponent(byteTitle)}&body=${encodeURIComponent(`Check this out: https://nyxura.ai/bytes/byte-${padded}`)}`}
+            className="flex items-center gap-2 hover:underline text-gray-600 dark:text-gray-300"
+          >
+            <FaEnvelope className="text-lg" /> Email
+          </a>
+        </div>
+      </div>
     </main>
   );
 }
