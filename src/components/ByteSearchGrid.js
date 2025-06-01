@@ -22,6 +22,14 @@ export default function ByteSearchGrid({ pageNum, totalPages, label, byteSlice, 
           className="mb-4"
         />
         <h1 className="text-3xl font-bold mb-2">Byte Index — Page {pageNum}</h1>
+            <h2 style={{
+            fontSize: '24px',
+            fontWeight: 'bold',
+            color: '#223366',
+            marginBottom: '20px'
+            }}>
+            {sectionLabel}
+            </h2>
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-6">{label}</p>
         <p className="text-gray-500 dark:text-gray-400 mt-2">Page {pageNum} of {totalPages}</p>
 

@@ -1,8 +1,9 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import Link from 'next/link';
 
-export default function ByteIndexClient({ deployed, byteTitles, byteSections }) {
+export default function ByteIndexClient({ deployed, byteTitles, byteSections, sectionLabel, pageNum, totalPages }) {
   const [search, setSearch] = useState('');
   const unlockedCount = deployed.length;
   const totalCount = byteTitles.length;
@@ -22,17 +23,18 @@ export default function ByteIndexClient({ deployed, byteTitles, byteSections }) 
 
     return (
       <a
-        key={byte.number}
-        href={isDeployed ? `/bytes/byte-${padded}` : '#'}
-        className={`block px-4 py-3 rounded-lg text-sm font-medium transition w-full text-left ${
-          isDeployed
-            ? 'bg-blue-600 text-white hover:bg-blue-700'
-            : 'bg-gray-200 text-gray-500 cursor-not-allowed dark:bg-gray-800 dark:text-gray-500'
-        }`}
-        title={isDeployed ? '' : 'Coming soon'}
-      >
-        Byte {padded} – {byte.title}
-      </a>
+    key={byte.number}
+    href={isDeployed ? `/bytes/byte-${padded}` : '#'}
+    className={`block px-4 py-3 rounded-lg text-sm font-medium transition w-full text-left ${
+        isDeployed
+        ? 'bg-gray-200 text-gray-800 hover:bg-gray-300 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+        : 'bg-gray-200 text-gray-500 cursor-not-allowed dark:bg-gray-800 dark:text-gray-500'
+    }`}
+    title={isDeployed ? '' : 'Coming soon'}
+    >
+    Byte {padded} – {byte.title}
+    </a>
+
     );
   };
 
@@ -54,8 +56,42 @@ export default function ByteIndexClient({ deployed, byteTitles, byteSections }) 
     );
   };
 
+  const renderPagination = () => (
+    <div className="flex justify-between items-center my-8">
+      <Link
+        href={pageNum > 1 ? `/bytes/page/${pageNum - 1}` : '#'}
+        className={`px-4 py-2 rounded-lg font-semibold ${
+          pageNum > 1
+            ? 'bg-blue-600 text-white hover:bg-blue-700'
+            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+        }`}
+      >
+        Previous
+      </Link>
+      <span className="font-semibold text-gray-700">
+        Page {pageNum} of {totalPages}
+      </span>
+      <Link
+        href={pageNum < totalPages ? `/bytes/page/${pageNum + 1}` : '#'}
+        className={`px-4 py-2 rounded-lg font-semibold ${
+          pageNum < totalPages
+            ? 'bg-blue-600 text-white hover:bg-blue-700'
+            : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+        }`}
+      >
+        Next
+      </Link>
+    </div>
+  );
+
   return (
     <main className="max-w-6xl mx-auto px-4 py-12">
+      {/* Section Label */}
+      <h2 className="text-3xl font-bold text-center text-blue-700 mb-6">{sectionLabel}</h2>
+
+      {/* Top Pagination */}
+      {renderPagination()}
+
       <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
         <h1 className="text-4xl font-bold text-center md:text-left">
           Byte-Sized AI Index
@@ -82,6 +118,9 @@ export default function ByteIndexClient({ deployed, byteTitles, byteSections }) 
       </div>
 
       {byteSections.map(renderSection)}
+
+      {/* Bottom Pagination */}
+      {renderPagination()}
     </main>
   );
 }
