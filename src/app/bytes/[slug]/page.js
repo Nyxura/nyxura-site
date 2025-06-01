@@ -61,6 +61,11 @@ export default async function BytePage({ params }) {
     (section) => byteNumber >= section.range[0] && byteNumber <= section.range[1]
   )?.label || 'AI Insight';
 
+  // 🆕 Calculate the page number for this Byte
+  const pageNumber = BYTE_SECTIONS.findIndex(
+    (section) => byteNumber >= section.range[0] && byteNumber <= section.range[1]
+  ) + 1;
+
   const deployed = getDeployedByteNumbers().sort((a, b) => a - b);
   const currentIndex = deployed.indexOf(byteNumber);
   const prevByte = currentIndex > 0 ? `/bytes/byte-${String(deployed[currentIndex - 1]).padStart(3, '0')}` : null;
@@ -90,7 +95,7 @@ export default async function BytePage({ params }) {
           </button>
         )}
 
-        <Link href="/bytes" className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-700 text-sm text-center dark:bg-blue-800 dark:hover:bg-blue-700">
+        <Link href={`/bytes/page/${pageNumber}`} className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-700 text-sm text-center dark:bg-blue-800 dark:hover:bg-blue-700">
           Back to All Bytes
         </Link>
 
@@ -131,7 +136,7 @@ export default async function BytePage({ params }) {
           </button>
         )}
 
-        <Link href="/bytes" className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-700 text-sm text-center dark:bg-blue-800 dark:hover:bg-blue-700">
+        <Link href={`/bytes/page/${pageNumber}`} className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-700 text-sm text-center dark:bg-blue-800 dark:hover:bg-blue-700">
           Back to All Bytes
         </Link>
 

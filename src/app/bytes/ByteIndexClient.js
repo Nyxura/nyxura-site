@@ -3,19 +3,28 @@
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
 
-export default function ByteIndexClient({ deployed, byteTitles, byteSections, sectionLabel, pageNum, totalPages }) {
+export default function ByteIndexClient({
+  deployed,
+  byteTitles,
+  byteSections,
+  sectionLabel,
+  pageNum,
+  totalPages
+}) {
   const [search, setSearch] = useState('');
   const unlockedCount = deployed.length;
   const totalCount = byteTitles.length;
 
   const filteredTitles = useMemo(() => {
-    return byteTitles.map((title, i) => ({
-      number: i + 1,
-      title,
-    })).filter((b) =>
-      b.title.toLowerCase().includes(search.trim().toLowerCase())
-    );
-  }, [search]);
+    return byteTitles
+      .map((title, i) => ({
+        number: i + 1,
+        title
+      }))
+      .filter((b) =>
+        b.title.toLowerCase().includes(search.trim().toLowerCase())
+      );
+  }, [search, byteTitles]);
 
   const renderByteButton = (byte) => {
     const padded = String(byte.number).padStart(3, '0');
@@ -23,18 +32,17 @@ export default function ByteIndexClient({ deployed, byteTitles, byteSections, se
 
     return (
       <a
-    key={byte.number}
-    href={isDeployed ? `/bytes/byte-${padded}` : '#'}
-    className={`block px-4 py-3 rounded-lg text-sm font-medium transition w-full text-left ${
-        isDeployed
-        ? 'bg-gray-200 text-gray-800 hover:bg-gray-300 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
-        : 'bg-gray-200 text-gray-500 cursor-not-allowed dark:bg-gray-800 dark:text-gray-500'
-    }`}
-    title={isDeployed ? '' : 'Coming soon'}
-    >
-    Byte {padded} – {byte.title}
-    </a>
-
+        key={byte.number}
+        href={isDeployed ? `/bytes/byte-${padded}` : '#'}
+        className={`block px-4 py-3 rounded-lg text-sm font-medium transition w-full text-left ${
+          isDeployed
+            ? 'bg-gray-200 text-gray-800 hover:bg-gray-300 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+            : 'bg-gray-200 text-gray-500 cursor-not-allowed dark:bg-gray-800 dark:text-gray-500'
+        }`}
+        title={isDeployed ? '' : 'Coming soon'}
+      >
+        Byte {padded} – {byte.title}
+      </a>
     );
   };
 
@@ -87,10 +95,14 @@ export default function ByteIndexClient({ deployed, byteTitles, byteSections, se
   return (
     <main className="max-w-6xl mx-auto px-4 py-12">
       {/* Section Label */}
-      <h2 className="text-3xl font-bold text-center text-blue-700 mb-6">{sectionLabel}</h2>
+      {!search && (
+        <h2 className="text-3xl font-bold text-center text-blue-700 mb-6">
+          {sectionLabel}
+        </h2>
+      )}
 
       {/* Top Pagination */}
-      {renderPagination()}
+      {!search && renderPagination()}
 
       <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
         <h1 className="text-4xl font-bold text-center md:text-left">
@@ -117,10 +129,19 @@ export default function ByteIndexClient({ deployed, byteTitles, byteSections, se
         />
       </div>
 
-      {byteSections.map(renderSection)}
+      {search ? (
+        <div className="mb-12">
+          <h2 className="text-2xl font-bold mb-4">Search Results</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {filteredTitles.map(renderByteButton)}
+          </div>
+        </div>
+      ) : (
+        byteSections.map(renderSection)
+      )}
 
       {/* Bottom Pagination */}
-      {renderPagination()}
+      {!search && renderPagination()}
     </main>
   );
 }
